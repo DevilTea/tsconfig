@@ -5,7 +5,7 @@ Version 1 redesigns the presets around TypeScript 6, runtime environment, and mo
 ## Requirements
 
 - TypeScript 6.x
-- `@types/node` 22 through 24 when using a Node.js preset
+- a version of `@types/node` that matches the target runtime when using a Node.js preset
 
 ```sh
 pnpm add -D typescript@^6 @deviltea/tsconfig@^1
