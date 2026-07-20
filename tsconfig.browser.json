@@ -3,11 +3,11 @@
 	"extends": "./tsconfig._bundler.json",
 	"compilerOptions": {
 		"target": "ES2022",
+		"jsx": "preserve",
 		"lib": [
 			"ES2022",
 			"DOM"
 		],
-		"types": [],
-		"jsx": "preserve"
+		"types": []
 	}
 }
