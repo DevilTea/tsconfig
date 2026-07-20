@@ -15,7 +15,7 @@ const fixtures = [
 		name: 'base',
 		checks: [
 			['tsconfig.json', true],
-			['tsconfig.dom-global.json', false],
+			['tsconfig.dom-global.json', true],
 			['tsconfig.strict-failure.json', false],
 		],
 		assertConfig(config) {
@@ -130,7 +130,9 @@ function run(command, arguments_, cwd, allowFailure = false) {
 	})
 	const stdout = (result.stdout ?? '').trim()
 	const stderr = (result.stderr ?? '').trim()
-	const output = [stdout, stderr].filter(Boolean).join('\n')
+	const output = [stdout, stderr]
+		.filter(Boolean)
+		.join('\n')
 
 	if (result.error)
 		throw result.error
