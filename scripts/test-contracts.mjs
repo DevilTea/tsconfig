@@ -70,8 +70,13 @@ const modernFixtures = [
 				types: [],
 			}),
 			'tsconfig.failure.json': createConfig('./tsconfig.json', ['strict-failure.ts']),
-			'positive.ts': 'export const value: number = 1\n',
-			'strict-failure.ts': 'export function maybeValue(flag: boolean): number {\n\tif (flag)\n\t\treturn 1\n}\n',
+			'positive.ts': source('export const value: number = 1'),
+			'strict-failure.ts': source(
+				'export function maybeValue(flag: boolean): number {',
+				'\tif (flag)',
+				'\t\treturn 1',
+				'}',
+			),
 		},
 		checks: [
 			['tsconfig.json', true],
@@ -89,9 +94,9 @@ const modernFixtures = [
 			'tsconfig.json': createConfig('@deviltea/tsconfig/neutral', ['positive.ts']),
 			'tsconfig.dom.json': createConfig('./tsconfig.json', ['dom-global.ts']),
 			'tsconfig.node.json': createConfig('./tsconfig.json', ['node-global.ts']),
-			'positive.ts': "export const values = new Map<string, number>([['one', 1]])\n",
-			'dom-global.ts': 'export const title = document.title\n',
-			'node-global.ts': 'export const platform = process.platform\n',
+			'positive.ts': source('export const values = new Map<string, number>([[\'one\', 1]])'),
+			'dom-global.ts': source('export const title = document.title'),
+			'node-global.ts': source('export const platform = process.platform'),
 		},
 		checks: [
 			['tsconfig.json', true],
@@ -111,8 +116,11 @@ const modernFixtures = [
 		files: {
 			'tsconfig.json': createConfig('@deviltea/tsconfig/browser', ['positive.ts']),
 			'tsconfig.node.json': createConfig('./tsconfig.json', ['node-global.ts']),
-			'positive.ts': "document.title = 'contract'\nexport const href = window.location.href\n",
-			'node-global.ts': 'export const platform = process.platform\n',
+			'positive.ts': source(
+				'document.title = \'contract\'',
+				'export const href = window.location.href',
+			),
+			'node-global.ts': source('export const platform = process.platform'),
 		},
 		checks: [
 			['tsconfig.json', true],
@@ -128,8 +136,12 @@ const modernFixtures = [
 		dependencies: nodeTypes,
 		files: {
 			'tsconfig.json': createConfig('@deviltea/tsconfig/node-bundler', ['main.ts', 'sibling.ts']),
-			'main.ts': "import process from 'node:process'\nimport { value } from './sibling'\nexport const result = `${process.platform}:${value}`\n",
-			'sibling.ts': 'export const value = 1\n',
+			'main.ts': source(
+				'import process from \'node:process\'',
+				'import { value } from \'./sibling\'',
+				'export const result = process.platform + \':\' + value',
+			),
+			'sibling.ts': source('export const value = 1'),
 		},
 		checks: [['tsconfig.json', true]],
 		assertConfig(config) {
@@ -143,9 +155,16 @@ const modernFixtures = [
 		files: {
 			'tsconfig.json': createConfig('@deviltea/tsconfig/node', ['positive.ts', 'sibling.ts']),
 			'tsconfig.extensionless.json': createConfig('./tsconfig.json', ['extensionless.ts', 'sibling.ts']),
-			'positive.ts': "import process from 'node:process'\nimport { value } from './sibling.js'\nexport const result = `${process.platform}:${value}`\n",
-			'extensionless.ts': "import { value } from './sibling'\nexport { value }\n",
-			'sibling.ts': 'export const value = 1\n',
+			'positive.ts': source(
+				'import process from \'node:process\'',
+				'import { value } from \'./sibling.js\'',
+				'export const result = process.platform + \':\' + value',
+			),
+			'extensionless.ts': source(
+				'import { value } from \'./sibling\'',
+				'export { value }',
+			),
+			'sibling.ts': source('export const value = 1'),
 		},
 		checks: [
 			['tsconfig.json', true],
@@ -161,7 +180,10 @@ const modernFixtures = [
 		dependencies: nodeTypes,
 		files: {
 			'tsconfig.json': createConfig('@deviltea/tsconfig/tooling', ['tooling.js']),
-			'tooling.js': "import process from 'node:process'\nexport const platform = process.platform\n",
+			'tooling.js': source(
+				'import process from \'node:process\'',
+				'export const platform = process.platform',
+			),
 		},
 		checks: [['tsconfig.json', true]],
 		assertConfig(config) {
@@ -173,7 +195,7 @@ const modernFixtures = [
 		name: 'internal-export',
 		files: {
 			'tsconfig.json': createConfig('@deviltea/tsconfig/_bundler', ['positive.ts']),
-			'positive.ts': 'export const value = 1\n',
+			'positive.ts': source('export const value = 1'),
 		},
 		checks: [['tsconfig.json', false]],
 	},
@@ -260,6 +282,10 @@ function createConfig(extendsConfig, files, compilerOptions = {}) {
 		},
 		files,
 	}, null, '\t')}\n`
+}
+
+function source(...lines) {
+	return `${lines.join('\n')}\n`
 }
 
 function readArgument(name) {
