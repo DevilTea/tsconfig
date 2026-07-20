@@ -1,6 +1,8 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
+		"useDefineForClassFields": true,
+		"libReplacement": false,
 		"strict": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
@@ -12,8 +14,6 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"forceConsistentCasingInFileNames": true,
-		"useDefineForClassFields": true,
-		"skipLibCheck": true,
-		"libReplacement": false
+		"skipLibCheck": true
 	}
 }
