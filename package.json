@@ -42,7 +42,7 @@
 		"release": "bumpp && pnpm publish"
 	},
 	"peerDependencies": {
-		"@types/node": ">=22 <25",
+		"@types/node": "*",
 		"typescript": ">=6.0.0 <7.0.0"
 	},
 	"peerDependenciesMeta": {
