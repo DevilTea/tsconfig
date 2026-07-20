@@ -142,17 +142,19 @@ For browser-oriented tests that need both Node.js tooling and DOM APIs, extend `
 
 ### VitePress documentation
 
-Use separate project configs for client content and Node.js configuration:
+Use separate project configs for client content and Node.js configuration.
+
+`docs/tsconfig.docs.json`:
 
 ```json
-// docs/tsconfig.docs.json
 {
 	"extends": "@deviltea/tsconfig/browser"
 }
 ```
 
+`docs/tsconfig.configs.json`:
+
 ```json
-// docs/tsconfig.configs.json
 {
 	"extends": "@deviltea/tsconfig/tooling",
 	"include": [".vitepress/config.ts"]
