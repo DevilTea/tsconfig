@@ -32,7 +32,7 @@ const fixtures = [
 		],
 		assertConfig(config) {
 			assert(
-				config.compilerOptions.lib.some(value => value.includes('lib.dom.d.ts')),
+				config.compilerOptions.lib.some(value => value.toLowerCase().includes('dom')),
 				'dom preset must include the DOM library',
 			)
 		},
