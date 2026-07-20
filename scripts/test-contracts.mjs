@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { cp, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -58,7 +59,7 @@ const fixtures = [
 
 try {
 	const packResult = run('npm', ['pack', '--json', '--pack-destination', workspace], root)
-	const [{ filename }] = JSON.parse(packResult.output)
+	const [{ filename }] = JSON.parse(packResult.stdout)
 	const tarball = join(workspace, filename)
 
 	for (const fixture of fixtures)
@@ -80,7 +81,7 @@ async function runFixture(fixture, tarball) {
 			type: 'module',
 			devDependencies: {
 				'@deviltea/tsconfig': `file:${tarball}`,
-				typescript: typescriptVersion,
+				'typescript': typescriptVersion,
 				...fixture.dependencies,
 			},
 		}, null, '\t')}\n`,
@@ -109,7 +110,7 @@ async function runFixture(fixture, tarball) {
 			[tsc, '--project', 'tsconfig.json', '--showConfig', '--pretty', 'false'],
 			fixtureRoot,
 		)
-		fixture.assertConfig(JSON.parse(result.output))
+		fixture.assertConfig(JSON.parse(result.stdout))
 	}
 }
 
@@ -127,7 +128,9 @@ function run(command, arguments_, cwd, allowFailure = false) {
 			npm_config_update_notifier: 'false',
 		},
 	})
-	const output = `${result.stdout ?? ''}${result.stderr ?? ''}`.trim()
+	const stdout = (result.stdout ?? '').trim()
+	const stderr = (result.stderr ?? '').trim()
+	const output = [stdout, stderr].filter(Boolean).join('\n')
 
 	if (result.error)
 		throw result.error
@@ -137,6 +140,8 @@ function run(command, arguments_, cwd, allowFailure = false) {
 	return {
 		output,
 		status: result.status,
+		stderr,
+		stdout,
 	}
 }
 
